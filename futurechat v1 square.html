@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FutureChat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Monochrome Aesthetic */
+        body {
+            background: #ffffff;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: #000000;
+        }
+        .chat-container {
+            background: #ffffff;
+        }
+        .message {
+            background: #f0f0f0;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+        .message:hover {
+            background: #e0e0e0;
+        }
+        .input-field {
+            background: #f0f0f0;
+            border: 1px solid #000000;
+            color: #000000;
+        }
+        .input-field:focus {
+            outline: none;
+            box-shadow: 0 0 5px #000000;
+        }
+        .btn {
+            background: #000000;
+            color: #ffffff;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            background: #333333;
+        }
+        /* Pulsing Online Dot */
+        .online-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #ccff00; /* Highlighter yellow/green */
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 4px;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="chat-container w-full max-w-md overflow-hidden">
+        <!-- Header -->
+        <div class="bg-gray-200 p-3 flex justify-between items-center">
+            <h1 class="text-lg font-bold">FutureChat <span class="text-sm opacity-75">v1.0</span></h1>
+            <div class="flex space-x-2">
+                <button class="text-xs px-2 py-1 bg-black text-white rounded">Sign Out</button>
+            </div>
+        </div>
+
+        <!-- Chat Area -->
+        <div id="chatArea" class="h-96 p-4 overflow-y-auto">
+            <div class="message">
+                <span class="text-black font-bold">System:</span>
+                <span> Welcome to FutureChat!</span>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="p-4 border-t border-black">
+            <div class="flex space-x-2">
+                <input 
+                    id="messageInput" 
+                    type="text" 
+                    placeholder="Type a message..." 
+                    class="input-field flex-1 p-2 rounded-lg"
+                >
+                <button 
+                    id="sendButton" 
+                    class="btn px-4 py-2 rounded-lg"
+                >
+                    Send
+                </button>
+            </div>
+        </div>
+
+        <!-- Status Bar -->
+        <div class="bg-gray-200 p-2 text-xs flex justify-between">
+            <span><span class="online-dot"></span>Online</span>
+            <span>Users: 12</span>
+        </div>
+    </div>
+
+    <script>
+        // Chat functionality
+        const chatArea = document.getElementById('chatArea');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+
+        // Mock user data
+        const user = {
+            username: 'ChatUser'
+        };
+
+        // Add message to chat
+        function addMessage(sender, content) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message';
+            messageDiv.innerHTML = `
+                <span class="text-black font-bold">${sender}:</span>
+                <span>${content}</span>
+            `;
+            chatArea.appendChild(messageDiv);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        // Handle send button click
+        sendButton.addEventListener('click', () => {
+            const message = messageInput.value.trim();
+            if (message) {
+                addMessage(user.username, message);
+                messageInput.value = '';
+                
+                // Simulate reply after 1 second
+                setTimeout(() => {
+                    addMessage('ChatBot', 'Hey! You said: ' + message);
+                }, 1000);
+            }
+        });
+
+        // Handle Enter key press
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendButton.click();
+            }
+        });
+
+        // Simulate incoming message on load
+        setTimeout(() => {
+            addMessage('ChatBot', 'Hello! How can I assist you today?');
+        }, 1000);
+    </script>
+</body>
+</html>
